@@ -8,11 +8,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-
+import { Button } from "@/components/ui/button"
+import Link from 'next/link'
 
 export default function MainPage() {
     const [consumers, setConsumers] = useState<Record<string, string>>({});
     const [open, setOpen] = useState(false);
+    const [questions, setQuestions] = useState<string[]>([]);
 
     const addConsumer = (name: string, description: string) => {
         setConsumers(prevConsumers => ({...prevConsumers, [name]: description}));
@@ -32,6 +34,48 @@ export default function MainPage() {
                 <p className="mb-4">Enter your product description below:</p>
                 <Textarea placeholder="Type your product description here." className="w-full mb-8" />
                 <h1 className="text-3xl font-bold mb-4 mt-8">Questions</h1>
+                <div className="mb-8">
+                    {questions.map((question, index) => (
+                        <div key={index} className="flex items-center mb-2">
+                            <p className="flex-grow text-left">{question}</p>
+                            <button
+                                onClick={() => setQuestions(questions.filter((_, i) => i !== index))}
+                                className="ml-2 text-red-500 hover:text-red-700"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    ))}
+                    <div className="flex items-center">
+                        <input
+                            type="text"
+                            placeholder="Ask questions to your consumers!"
+                            className="flex-grow bg-black text-white border border-white rounded-md p-2 mr-2 placeholder:text-muted-foreground"
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter' && e.currentTarget.value.trim() !== '') {
+                                    setQuestions([...questions, e.currentTarget.value.trim()]);
+                                    e.currentTarget.value = '';
+                                }
+                            }}
+                        />
+                        <button
+                            onClick={() => {
+                                const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+                                if (input && input.value.trim() !== '') {
+                                    setQuestions([...questions, input.value.trim()]);
+                                    input.value = '';
+                                }
+                            }}
+                            className="bg-gray-800 text-white h-10 w-10 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
                 <h2 className="text-3xl font-bold mt-8 mb-4">Consumer</h2>
                 <div className="flex justify-center">
                     <Popover open={open} onOpenChange={setOpen}>
@@ -114,6 +158,11 @@ export default function MainPage() {
                             </PopoverContent>
                         </Popover>
                     ))}
+                </div>
+                <div className="mt-8">
+                    <Button asChild className="bg-white text-black hover:bg-gray-200 border border-black">
+                        <Link href="/simulate">SIMULATE</Link>
+                    </Button>
                 </div>
             </div>
         </div>
