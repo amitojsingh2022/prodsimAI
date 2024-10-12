@@ -10,14 +10,18 @@ import {
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 
 export default function MainPage() {
     const [consumers, setConsumers] = useState<Record<string, string>>({});
     const [open, setOpen] = useState(false);
     const [questions, setQuestions] = useState<string[]>([]);
+    const router = useRouter();
 
     const addConsumer = (name: string, description: string) => {
-        setConsumers(prevConsumers => ({...prevConsumers, [name]: description}));
+        const newConsumers = {...consumers, [name]: description};
+        setConsumers(newConsumers);
+        localStorage.setItem('consumers', JSON.stringify(Object.entries(newConsumers).map(([name, description]) => ({ name, description }))));
     };
 
     const deleteConsumer = (name: string) => {
@@ -160,8 +164,11 @@ export default function MainPage() {
                     ))}
                 </div>
                 <div className="mt-8">
-                    <Button asChild className="bg-white text-black hover:bg-gray-200 border border-black">
-                        <Link href="/simulate">SIMULATE</Link>
+                    <Button
+                        className="bg-white text-black hover:bg-gray-200 border border-black"
+                        onClick={() => router.push('/loading')}
+                    >
+                        SIMULATE
                     </Button>
                 </div>
             </div>
