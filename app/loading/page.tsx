@@ -4,6 +4,22 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Progress } from "@/components/ui/progress";
 
+import { generate_agent, answer_question, group_answer, Customer } from '../functions/models'
+
+interface Person {
+    name: string,
+    description: string,
+}
+
+async function generate_agents(people: Person[]) {
+    const customers = [];
+    for (const person in people) {
+        const sys_prompt = await generate_agent(person.name, person.description, product);
+        customers.push({ name: person.name, history: { role: "system", content: sys_prompt }})
+    }
+    return customers;
+}
+
 export default function LoadingPage() {
     const router = useRouter();
     const [progress, setProgress] = useState(0);

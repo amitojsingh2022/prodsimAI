@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -12,8 +12,9 @@ import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 
-export default function Home() {
+export default function HomePage() {
     const [consumers, setConsumers] = useState<Record<string, string>>({});
+    const productRef = useRef<HTMLTextAreaElement>(null);
     const [open, setOpen] = useState(false);
     const [questions, setQuestions] = useState<string[]>([]);
     const router = useRouter();
@@ -36,7 +37,7 @@ export default function Home() {
             <div className="max-w-md w-full text-center">
                 <h1 className="text-3xl font-bold mb-4">Product</h1>
                 <p className="mb-4">Enter your product description below:</p>
-                <Textarea placeholder="Type your product description here." className="w-full mb-8" />
+                <Textarea placeholder="Type your product description here." className="w-full mb-8" ref = {productRef} />
                 <h1 className="text-3xl font-bold mb-4 mt-8">Questions</h1>
                 <div className="mb-8">
                     {questions.map((question, index) => (
